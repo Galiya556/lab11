@@ -1,0 +1,113 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+abstract class User {
+  - int _id
+  - string _name
+  - string _email
+  - string _phone
+  + Id: int
+  + Name: string
+  + Email: string
+  + Phone: string
+  + UpdateContactInfo(email: string, phone: string): void
+}
+
+abstract class MedicalStaff {
+  - string _specialization
+  - string _office
+  - string _schedule
+  + Specialization: string
+  + Office: string
+  + Schedule: string
+}
+
+class Patient {
+  - DateTime _dateOfBirth
+  - string _address
+  + DateOfBirth: DateTime
+  + Address: string
+  + ScheduleAppointment(doctor: Doctor, dateTime: DateTime): Appointment
+  + UpdatePersonalData(address: string): void
+  + ViewHistory(): void
+}
+
+class Doctor {
+  + CreatePrescription(patient: Patient, medication: Medication, dosage: string, quantity: int): Prescription
+  + AssignTreatment(patient: Patient): void
+  + UpdateSchedule(schedule: string): void
+}
+
+class Nurse
+
+class Appointment {
+  + Id: int
+  + Date: DateTime
+  + Status: string
+  + Create(patient: Patient, doctor: Doctor, date: DateTime): void
+  + Cancel(): void
+  + Complete(): void
+}
+
+class MedicalRecord {
+  + Id: int
+  + AddEntry(entry: MedicalRecordEntry): void
+  + UpdateDiagnosis(entry: MedicalRecordEntry, diagnosis: string): void
+  + RemoveEntry(entry: MedicalRecordEntry): void
+}
+
+class MedicalRecordEntry {
+  + Date: DateTime
+  + Diagnosis: string
+  + Notes: string
+  + TestResults: string
+}
+
+class Prescription {
+  + Id: int
+  + ValidUntil: DateTime
+  + Create(): void
+  + Update(): void
+  + Cancel(): void
+}
+
+class PrescriptionItem {
+  + Dosage: string
+  + Quantity: int
+}
+
+class Medication {
+  + Id: int
+  + Name: string
+  + QuantityInStock: int
+  + ExpirationDate: DateTime
+  + Order(amount: int): void
+  + Dispense(amount: int): void
+  + WriteOff(amount: int): void
+}
+
+class Inventory {
+  + GetMedicationByName(name: string): Medication
+  + ReserveForPrescription(prescription: Prescription): void
+  + UpdateStock(medication: Medication, amount: int): void
+}
+
+User <|-- Patient
+User <|-- MedicalStaff
+MedicalStaff <|-- Doctor
+MedicalStaff <|-- Nurse
+
+Patient "1" -- "1" MedicalRecord
+MedicalRecord "1" o-- "*" MedicalRecordEntry
+
+Patient "1" -- "*" Appointment
+Doctor "1" -- "*" Appointment
+
+Patient "1" -- "*" Prescription
+Doctor "1" -- "*" Prescription
+
+Prescription "1" o-- "*" PrescriptionItem
+PrescriptionItem "1" -- "1" Medication
+
+Inventory "1" o-- "*" Medication
+@enduml
