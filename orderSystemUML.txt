@@ -1,0 +1,53 @@
+@startuml
+skinparam componentStyle rectangle
+
+interface IUserService
+interface IProductService
+interface IOrderService
+interface IPaymentService
+interface INotificationService
+
+interface IDatabase
+interface IExternalPaymentAPI
+interface INotificationGatewayAPI
+
+component "UserService" as UserService
+component "ProductService" as ProductService
+component "OrderService" as OrderService
+component "PaymentService" as PaymentService
+component "NotificationService" as NotificationService
+component "Database" as Database
+component "ExternalPaymentGateway" as PaymentGateway
+component "Email/SMS Gateway" as MsgGateway
+component "Web/Mobile UI" as UI
+
+UserService - IUserService
+ProductService - IProductService
+OrderService - IOrderService
+PaymentService - IPaymentService
+NotificationService - INotificationService
+
+Database - IDatabase
+PaymentGateway - IExternalPaymentAPI
+MsgGateway - INotificationGatewayAPI
+
+UI ..> IUserService
+UI ..> IOrderService
+UI ..> IProductService
+
+OrderService ..> IUserService
+OrderService ..> IProductService
+OrderService ..> IPaymentService
+OrderService ..> INotificationService
+
+PaymentService ..> IDatabase
+PaymentService ..> IExternalPaymentAPI
+PaymentService ..> INotificationService
+
+UserService ..> IDatabase
+ProductService ..> IDatabase
+OrderService ..> IDatabase
+
+NotificationService ..> INotificationGatewayAPI
+
+@enduml
