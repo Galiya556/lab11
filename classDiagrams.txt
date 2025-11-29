@@ -1,0 +1,88 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class Book {
+  - string _title
+  - string _author
+  - string _isbn
+  - bool _isAvailable
+  + Book(title: string, author: string, isbn: string)
+  + Title: string
+  + Author: string
+  + Isbn: string
+  + IsAvailable: bool
+  + MarkAsLoaned(): void
+  + MarkAsAvailable(): void
+}
+
+class Reader {
+  - int _id
+  - string _name
+  - string _email
+  + Reader(id: int, name: string, email: string)
+  + Id: int
+  + Name: string
+  + Email: string
+  + BorrowBook(book: Book): Loan
+  + ReturnBook(book: Book): void
+}
+
+class Librarian {
+  - int _id
+  - string _name
+  - string _position
+  + Librarian(id: int, name: string, position: string)
+  + Id: int
+  + Name: string
+  + Position: string
+  + AddBook(book: Book): void
+  + RemoveBook(book: Book): void
+  + RegisterReader(reader: Reader): void
+}
+
+class Loan {
+  - int _id
+  - DateTime _loanDate
+  - DateTime? _returnDate
+  - bool _isCompleted
+  + Loan(id: int, book: Book, reader: Reader, librarian: Librarian)
+  + Id: int
+  + Book: Book
+  + Reader: Reader
+  + Librarian: Librarian
+  + LoanDate: DateTime
+  + ReturnDate: DateTime?
+  + IsCompleted: bool
+  + IssueLoan(): void
+  + CompleteLoan(): void
+}
+
+class Library {
+  - List<Book> _books
+  - List<Reader> _readers
+  - List<Librarian> _librarians
+  - List<Loan> _loans
+  + Books: List<Book>
+  + Readers: List<Reader>
+  + Librarians: List<Librarian>
+  + Loans: List<Loan>
+  + AddBook(book: Book): void
+  + RemoveBook(book: Book): void
+  + RegisterReader(reader: Reader): void
+  + FindBooksByTitle(title: string): List<Book>
+  + FindBooksByAuthor(author: string): List<Book>
+  + CreateLoan(book: Book, reader: Reader, librarian: Librarian): Loan
+}
+
+Library "1" o-- "*" Book
+Library "1" o-- "*" Reader
+Library "1" o-- "*" Librarian
+Library "1" o-- "*" Loan
+
+Loan "1" --> "1" Book
+Loan "1" --> "1" Reader
+Loan "1" --> "1" Librarian
+
+Reader ..> Loan : uses
+Librarian ..> Loan : manages
+@enduml
